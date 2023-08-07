@@ -12,13 +12,14 @@ import {
 } from "@heroicons/react/outline";
 const SideBar = () => {
   return (
-    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
+    <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full ">
       {/* Logo */}
       <div className="hoverEffect p-0 hover:bg-blue-100 xl:px-1">
         <Image
           src="https://i.postimg.cc/qv06TWTg/371907030-TWITTER-ICON-TRANSPARENT-1080.gif"
           width="50"
           height="50"
+          alt="logo"
         />
       </div>
       {/* Menu */}
