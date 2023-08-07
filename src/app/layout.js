@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
           {/* widgets */}
           <Widgets />
           {/* Modal */}
-          <Modal />
+          {/* <Modal /> */}
         </main>
         {children}
       </body>
