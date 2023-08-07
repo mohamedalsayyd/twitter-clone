@@ -3,8 +3,16 @@ import { SearchIcon } from "@heroicons/react/outline";
 import News from "../News/News";
 import { useEffect, useState } from "react";
 
-// Server-side function to fetch data
-const fetchData = async () => {
+// Server-side function to fetch randomUsers data
+const fetchRandomUsers = async () => {
+  const res = await fetch(
+    "https://randomuser.me/api/?results=30&inc=name,login,picture"
+  );
+  const randomUsers = await res.json();
+  return randomUsers.results;
+};
+// Server-side function to fetch news data
+const fetchNewsData = async () => {
   const res = await fetch(
     "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
   );
@@ -12,16 +20,18 @@ const fetchData = async () => {
   return newsResults.articles;
 };
 const Widgets = () => {
-  const [data, setData] = useState([]);
+  const [newsData, setNewsData] = useState([]);
+  const [usersData, setUsersData] = useState([]);
   const [articleNum, setArticleNum] = useState(3);
+  const [userNum, setUserNum] = useState(3);
 
   useEffect(() => {
-    fetchData().then((articles) => setData(articles));
+    fetchNewsData().then((articles) => setNewsData(articles));
+    fetchRandomUsers().then((user) => setUsersData(user));
   }, []);
-
   return (
     <div className="xl:w-[600px] hidden lg:inline ml-8">
-      <div className="w-[90%] xl:w-[75%] sticky top-0 bg-white py-1.5 z-50">
+      <div className="w-[90%] xl:w-[100%] sticky top-0 bg-white py-1.5 z-50">
         <div className="flex items-center p-3 rounded-full bg-red-300 relative ">
           <SearchIcon className="h-5 z-50 text-gray-500" />
           <input
@@ -31,13 +41,46 @@ const Widgets = () => {
           />
         </div>
       </div>
-      <div className="text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
+      <div className="text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[100%] ">
         <h4 className="font-bold text-xl px-4">What's happening</h4>
-        {data.slice(0, articleNum).map((article) => (
+        {newsData.slice(0, articleNum).map((article) => (
           <News key={article.title} article={article} />
         ))}
         <button
           onClick={() => setArticleNum(articleNum + 3)}
+          className="text-blue-300 pl-4 pb-3 hover:text-blue-400"
+        >
+          Show more
+        </button>
+      </div>
+      <div className=" text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 mt-4 w-[90%] xl:w-[100%] ">
+        <h4 className="font-bold text-xl px-4">Who to follow</h4>
+        {usersData.slice(0, userNum).map((user) => (
+          <div
+            key={user.login.username}
+            className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200"
+          >
+            <img
+              src={user.picture.thumbnail}
+              alt={user.login.username}
+              width="40"
+              className="rounded-full"
+            />
+            <div className="truncate ml-4 leading-5">
+              <h4 className="font-bold hover:underline text-[14px] truncate">
+                {user.login.username}
+              </h4>
+              <h5 className="text-[13px] text-gray-500 truncate">
+                {user.name.first + " " + user.name.last}{" "}
+              </h5>
+            </div>
+            <button className="ml-auto bg-black text-white rounded-full text-sm px-3.5 py-1.5 font-bold">
+              Follow
+            </button>
+          </div>
+        ))}
+        <button
+          onClick={() => setUserNum(userNum + 3)}
           className="text-blue-300 pl-4 pb-3 hover:text-blue-400"
         >
           Show more
