@@ -19,12 +19,11 @@ import {
   PopoverArrow,
   Button,
 } from "@chakra-ui/react";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 const SideBar = () => {
   const { data: session } = useSession();
-  console.log(session);
   return (
     <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full ">
       {/* Logo */}

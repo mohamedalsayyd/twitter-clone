@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^1.0.6",
     "autoprefixer": "10.4.14",
+    "emoji-picker-react": "^4.4.10",
+    "encoding": "^0.1.13",
     "firebase": "^10.1.0",
     "framer-motion": "^10.15.1",
     "next": "13.4.12",
