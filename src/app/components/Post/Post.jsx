@@ -17,10 +17,13 @@ import {
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Moment from "react-moment";
-import { db } from "../../../../firebase";
+import { db, storage } from "../../../../firebase";
 import { useEffect, useState } from "react";
+import { deleteObject, ref } from "firebase/storage";
+import { useToast, Button, HStack, Stack, Text } from "@chakra-ui/react";
 
 const Post = ({ post }) => {
+  const toast = useToast();
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
@@ -35,6 +38,7 @@ const Post = ({ post }) => {
       likes.findIndex((like) => like.id === session?.user.uid) !== -1
     );
   }, [likes]);
+
   const likePost = async () => {
     if (session) {
       if (hasLiked) {
@@ -48,6 +52,50 @@ const Post = ({ post }) => {
       window.location = "/auth/signin";
     }
   };
+  const deletePost = async () => {
+    deleteDoc(doc(db, "posts", post.id));
+    if (post.data().image) {
+      deleteObject(ref(storage, `/posts/${post.id}/image`));
+    }
+  };
+
+  const handleDeletePost = () => {
+    toast({
+      status: "warning",
+      duration: null,
+      isClosable: false,
+      position: "top",
+      render: () => (
+        <Stack bg="twitter.200" p={4} borderRadius="3">
+          <Text color="black" mb={2}>
+            Are you sure you want to delete this post ?
+          </Text>
+          <HStack spacing={4} justifyContent="center">
+            <Button
+              colorScheme="red"
+              fontWeight="bold"
+              size="sm"
+              onClick={() => {
+                deletePost();
+                toast.closeAll();
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              size="sm"
+              bg="black"
+              color="white"
+              onClick={() => toast.closeAll()}
+            >
+              No
+            </Button>
+          </HStack>
+        </Stack>
+      ),
+    });
+  };
+
   return (
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* image */}
@@ -88,7 +136,12 @@ const Post = ({ post }) => {
         {/* icons  */}
         <div className="flex justify-between text-gray-500 p-2">
           <ChatIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
-          <TrashIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100" />
+          {session?.user.uid === post?.data().id && (
+            <TrashIcon
+              onClick={() => handleDeletePost()}
+              className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
+            />
+          )}
           <div className="flex items-center">
             {hasLiked ? (
               <HeartIconFilled

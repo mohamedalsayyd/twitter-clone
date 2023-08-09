@@ -88,8 +88,10 @@ const SideBar = () => {
               <PopoverArrow />
               <PopoverBody>
                 <Button
-                  className="bg-red-500 p-2 rounded-full text-white"
+                  className="p-2 rounded-full text-white"
                   onClick={signOut}
+                  bg="red.400"
+                  color="white"
                 >
                   Log out
                 </Button>
