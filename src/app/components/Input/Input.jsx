@@ -40,6 +40,7 @@ const Input = () => {
       });
     }
     setInput("");
+
     setSelectedFile(null);
     setLoading(false);
   };
