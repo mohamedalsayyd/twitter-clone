@@ -128,11 +128,15 @@ const Post = ({ post }) => {
           {post.data().text}
         </p>
         {/* post image */}
-        <img
-          src={post.data().image}
-          alt={post.data().username}
-          className="rounded-2xl mr-2"
-        />
+        {post.data().image ? (
+          <img
+            src={post.data().image}
+            alt={post.data().username}
+            className="rounded-2xl mr-2"
+          />
+        ) : (
+          ""
+        )}
         {/* icons  */}
         <div className="flex justify-between text-gray-500 p-2">
           <ChatIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
