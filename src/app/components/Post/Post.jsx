@@ -28,6 +28,7 @@ const Post = ({ post }) => {
   const toast = useToast();
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
@@ -35,6 +36,12 @@ const Post = ({ post }) => {
     const unsubscribe = onSnapshot(
       collection(db, "posts", post.id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
+    );
+  }, [db]);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", post.id, "comment"),
+      (snapshot) => setComments(snapshot.docs)
     );
   }, [db]);
   useEffect(() => {
@@ -109,7 +116,7 @@ const Post = ({ post }) => {
         className="h-11 w-11 rounded-full mr-4"
       />
       {/* right side */}
-      <div>
+      <div className="flex-1">
         {/* Header */}
         <div className="flex items-center justify-between">
           {/* user info */}
@@ -143,13 +150,18 @@ const Post = ({ post }) => {
         )}
         {/* icons  */}
         <div className="flex justify-between text-gray-500 p-2">
-          <ChatIcon
-            onClick={() => {
-              setPostId(post.id);
-              session ? setOpen(!open) : (window.location = "/auth/signin");
-            }}
-            className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
-          />
+          <div className="flex items-center">
+            <ChatIcon
+              onClick={() => {
+                setPostId(post.id);
+                session ? setOpen(!open) : (window.location = "/auth/signin");
+              }}
+              className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
+            />
+            {comments.length > 0 && (
+              <span className="text-sm">{comments.length}</span>
+            )}
+          </div>
           <div className="flex items-center">
             {hasLiked ? (
               <HeartIconFilled
