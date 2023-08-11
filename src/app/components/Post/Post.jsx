@@ -21,12 +21,16 @@ import { db, storage } from "../../../../firebase";
 import { useEffect, useState } from "react";
 import { deleteObject, ref } from "firebase/storage";
 import { useToast, Button, HStack, Stack, Text } from "@chakra-ui/react";
+import { useRecoilState } from "recoil";
+import { modalState, postIdState } from "../../../../atom/modalAtom";
 
 const Post = ({ post }) => {
   const toast = useToast();
   const { data: session } = useSession();
   const [likes, setLikes] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, "posts", post.id, "likes"),
@@ -116,7 +120,7 @@ const Post = ({ post }) => {
             <span className="text-sm sm:text-[15px]">
               @{post.data().username.replace(/[^a-zA-Z]/g, "")} -{" "}
             </span>
-            <span className="text-sm sm:text-[15px] hover:underline">
+            <span className="text-sm sm:text-[15px] ">
               <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
           </div>
@@ -139,13 +143,13 @@ const Post = ({ post }) => {
         )}
         {/* icons  */}
         <div className="flex justify-between text-gray-500 p-2">
-          <ChatIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
-          {session?.user.uid === post?.data().id && (
-            <TrashIcon
-              onClick={() => handleDeletePost()}
-              className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
-            />
-          )}
+          <ChatIcon
+            onClick={() => {
+              setPostId(post.id);
+              session ? setOpen(!open) : (window.location = "/auth/signin");
+            }}
+            className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
+          />
           <div className="flex items-center">
             {hasLiked ? (
               <HeartIconFilled
@@ -164,6 +168,12 @@ const Post = ({ post }) => {
               </span>
             )}
           </div>
+          {session?.user.uid === post?.data().id && (
+            <TrashIcon
+              onClick={() => handleDeletePost()}
+              className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
+            />
+          )}
 
           <ShareIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
           <ChartBarIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
