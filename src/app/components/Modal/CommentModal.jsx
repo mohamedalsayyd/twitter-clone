@@ -51,7 +51,7 @@ const CommentModal = () => {
           // solve the console error
           ariaHideApp={false}
           onRequestClose={() => setOpen(false)}
-          className="max-w-lg w-[90%]  absolute top-24 left-[50%] translate-x-[-50%] bg-white  border-2 rounded-xl shadow-md focus-visible:border-none"
+          className="max-w-lg w-[90%]  absolute top-24 left-[50%] translate-x-[-50%] bg-white z-50 border-2 rounded-xl shadow-md focus-visible:border-none"
         >
           <div className="p-1">
             <div className="border-b border-gray-200 py-2 px-1.5">
