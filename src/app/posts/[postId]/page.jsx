@@ -4,7 +4,6 @@ import Post from "@/app/components/Post/Post";
 import SideBar from "@/app/components/SideBar/SideBar";
 import Widgets from "@/app/components/Widgets/Widgets";
 
-import { Modal } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import {
   collection,
@@ -18,6 +17,7 @@ import { useEffect, useState } from "react";
 import { db } from "../../../../firebase";
 import CommentModal from "@/app/components/Modal/CommentModal";
 import Comment from "@/app/components/Comment/Comment";
+import { AnimatePresence, motion } from "framer-motion";
 
 const page = ({ params }) => {
   const [post, setPost] = useState();
@@ -50,15 +50,25 @@ const page = ({ params }) => {
         </div>
         <Post post={post} key={id} id={id} />
         <div>
-          {comments.length > 0 &&
-            comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                commentId={comment.id}
-                oraginalPostId={id}
-                comment={comment.data()}
-              />
-            ))}
+          <AnimatePresence>
+            {comments.length > 0 &&
+              comments.map((comment) => (
+                <motion.div
+                  key={comment.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1 }}
+                >
+                  <Comment
+                    key={comment.id}
+                    commentId={comment.id}
+                    oraginalPostId={id}
+                    comment={comment.data()}
+                  />
+                </motion.div>
+              ))}
+          </AnimatePresence>
         </div>
       </div>
       {/* widgets */}
