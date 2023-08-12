@@ -69,7 +69,7 @@ const Input = () => {
               <textarea
                 className="w-full border-none focus:ring-0 text-lg placeholder-gray-700 tracking-wide min-h-[50px] text-gray-700"
                 rows="2"
-                placeholder="What's happening ?"
+                placeholder="Whats happening ?"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               ></textarea>
