@@ -12,7 +12,7 @@ const fetchRandomUsers = async () => {
   const randomUsers = await res.json();
   return randomUsers.results;
 };
-// Server-side function to fetch news data
+
 const fetchNewsData = async () => {
   const res = await fetch(
     "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
