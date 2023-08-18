@@ -8,7 +8,7 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  secret: process.env.SEC
+  secret: process.env.SEC,
   callbacks: {
     async session({ session, token }) {
       session.user.username = session.user.name
