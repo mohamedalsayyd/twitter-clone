@@ -1,16 +1,17 @@
 "use client";
 import Image from "next/image";
 import SideBarMenuItem from "../SideBarMenuItem/SideBarMenuItem";
-import { HomeIcon } from "@heroicons/react/solid";
+import { DotsCircleHorizontalIcon } from "@heroicons/react/outline";
 import {
+  HomeIcon,
   HashtagIcon,
   BellIcon,
   InboxIcon,
   BookmarkIcon,
   ClipboardIcon,
   UserIcon,
-  DotsCircleHorizontalIcon,
-} from "@heroicons/react/outline";
+  DotsCircleHorizontalIcon as DotsCircleHorizontalIconSolid,
+} from "@heroicons/react/solid";
 import {
   Popover,
   PopoverTrigger,
@@ -22,22 +23,37 @@ import {
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 const SideBar = () => {
   const { data: session } = useSession();
+  const router = useRouter();
+  const handleClick = (text) => {
+    if (text === "profile") {
+      router.push(`/profile/${session.user.uid}`);
+    } else if (text === "home") {
+      router.push(`/`);
+    }
+  };
+
   return (
     <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full ">
       {/* Logo */}
-      <div className="hoverEffect p-0 hover:bg-blue-100 xl:px-1">
+      <Link href="/" className="hoverEffect p-0 hover:bg-blue-100 xl:px-1">
         <Image
           src="https://i.postimg.cc/qv06TWTg/371907030-TWITTER-ICON-TRANSPARENT-1080.gif"
           width="50"
           height="50"
           alt="logo"
         />
-      </div>
+      </Link>
       {/* Menu */}
       <div className="mt-4 mb-2.5 xl:items-start">
-        <SideBarMenuItem text="Home" Icon={HomeIcon} active />
+        <SideBarMenuItem
+          handleClick={() => handleClick("home")}
+          text="Home"
+          Icon={HomeIcon}
+          active={`/`}
+        />
         <SideBarMenuItem text="Explore" Icon={HashtagIcon} />
         {session && (
           <>
@@ -45,8 +61,13 @@ const SideBar = () => {
             <SideBarMenuItem text="Messages" Icon={InboxIcon} />
             <SideBarMenuItem text="Bookmarks" Icon={BookmarkIcon} />
             <SideBarMenuItem text="Lists" Icon={ClipboardIcon} />
-            <SideBarMenuItem text="Profile" Icon={UserIcon} />
-            <SideBarMenuItem text="More" Icon={DotsCircleHorizontalIcon} />
+            <SideBarMenuItem
+              handleClick={() => handleClick("profile")}
+              active={`/profile/${session.user.uid}`}
+              text="Profile"
+              Icon={UserIcon}
+            />
+            <SideBarMenuItem text="More" Icon={DotsCircleHorizontalIconSolid} />
           </>
         )}
       </div>
